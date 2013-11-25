@@ -20,7 +20,7 @@ public class DocumentManager {
 	private String mCranDir = "cranfield";
 	private String mNews20Dir = "20news-18828";
 	private String mReutersDir = "reuters21578";
-	
+
 	public DocumentManager(String dataDir) {
 		mDataDir = dataDir;
 	}
@@ -41,34 +41,36 @@ public class DocumentManager {
 
 		return clean;
 	}
-	
-	private void createWordVector(String filetxt)
-			throws IOException, Exception {
+
+	private void createWordVector(String filetxt) throws IOException, Exception {
 		ArffLoader loader = new ArffLoader();
 		loader.setFile(new File(filetxt));
 		Instances textData = loader.getDataSet();
-		
+
 		StringToWordVector filter = new StringToWordVector();
-		filter.setOptions(weka.core.Utils.splitOptions("-C -prune-rate 20 -L -S"
-				+ " -stemmer weka.core.stemmers.SnowballStemmer"));
+		filter.setOptions(weka.core.Utils
+				.splitOptions("-C -prune-rate 20 -L -S"
+						+ " -stemmer weka.core.stemmers.SnowballStemmer"));
 		filter.setInputFormat(textData);
 		Instances wvData = Filter.useFilter(textData, filter);
-		wvData.setRelationName(
-				org.apache.commons.io.FilenameUtils.getBaseName(filetxt));
-		
-		String filewv = org.apache.commons.io.FilenameUtils.getFullPath(filetxt)
-				+ org.apache.commons.io.FilenameUtils.getBaseName(filetxt)
-				+ "_wv."
-				+ org.apache.commons.io.FilenameUtils.getExtension(filetxt);
-		
+		wvData.setRelationName(org.apache.commons.io.FilenameUtils
+				.getBaseName(filetxt));
+
+		String filewv =
+				org.apache.commons.io.FilenameUtils.getFullPath(filetxt)
+						+ org.apache.commons.io.FilenameUtils
+								.getBaseName(filetxt)
+						+ "_wv."
+						+ org.apache.commons.io.FilenameUtils
+								.getExtension(filetxt);
+
 		ArffSaver saver = new ArffSaver();
 		saver.setFile(new File(filewv));
 		saver.setInstances(wvData);
 		saver.writeBatch();
 	}
 
-	public void createCranDataset()
-			throws IOException, Exception {
+	public void createCranDataset() throws IOException, Exception {
 		File inDir = new File(mDataDir + mCranDir);
 		File arffText = new File(mDataDir + "arff/cranfield.arff");
 		ArffSaver saver = new ArffSaver();
@@ -101,8 +103,8 @@ public class DocumentManager {
 				File file = new File(inDir + "/" + files[i]);
 
 				if(!file.isDirectory()) {
-					BufferedReader reader = new BufferedReader(new FileReader(
-							file));
+					BufferedReader reader =
+							new BufferedReader(new FileReader(file));
 					Instance inst = new Instance(3);
 					inst.setValue((Attribute)attrs.elementAt(0), files[i]);
 
@@ -136,7 +138,6 @@ public class DocumentManager {
 
 	public static void main(String[] args) throws IOException, Exception {
 		String dataDir = "/home/marc/data/";
-
 		DocumentManager docMan = new DocumentManager(dataDir);
 		docMan.createCranDataset();
 	}
