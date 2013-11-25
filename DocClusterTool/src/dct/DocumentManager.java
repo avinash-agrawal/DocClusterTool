@@ -9,11 +9,21 @@ import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
 import weka.core.tokenizers.WordTokenizer;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class DocumentManager {
-	public DocumentManager() {}
+	private String mDataDir;
+	private String mCranDir = "cranfield";
+	private String mNews20Dir = "20news-18828";
+	private String mReutersDir = "reuters21578";
+	
+	public DocumentManager(String dataDir) {
+		mDataDir = dataDir;
+	}
 
 	private boolean isTag(String word) {
 		if(word.charAt(0) == '<' && word.charAt(word.length() - 1) == '>')
@@ -31,12 +41,38 @@ public class DocumentManager {
 
 		return clean;
 	}
-
-	public void createCranDataset(String dataDir, String cranDir)
-			throws IOException {
-		File inDir = new File(dataDir + cranDir);
+	
+	private void createWordVector(String filetxt)
+			throws IOException, Exception {
+		ArffLoader loader = new ArffLoader();
+		loader.setFile(new File(filetxt));
+		Instances textData = loader.getDataSet();
+		
+		StringToWordVector filter = new StringToWordVector();
+		filter.setOptions(weka.core.Utils.splitOptions("-C -prune-rate 20 -L -S"
+				+ " -stemmer weka.core.stemmers.SnowballStemmer"));
+		filter.setInputFormat(textData);
+		Instances wvData = Filter.useFilter(textData, filter);
+		wvData.setRelationName(
+				org.apache.commons.io.FilenameUtils.getBaseName(filetxt));
+		
+		String filewv = org.apache.commons.io.FilenameUtils.getFullPath(filetxt)
+				+ org.apache.commons.io.FilenameUtils.getBaseName(filetxt)
+				+ "_wv."
+				+ org.apache.commons.io.FilenameUtils.getExtension(filetxt);
+		
 		ArffSaver saver = new ArffSaver();
-		saver.setFile(new File(dataDir + "arff/cranfield.arff"));
+		saver.setFile(new File(filewv));
+		saver.setInstances(wvData);
+		saver.writeBatch();
+	}
+
+	public void createCranDataset()
+			throws IOException, Exception {
+		File inDir = new File(mDataDir + mCranDir);
+		File arffText = new File(mDataDir + "arff/cranfield.arff");
+		ArffSaver saver = new ArffSaver();
+		saver.setFile(arffText);
 
 		Attribute filename = new Attribute("filename", (FastVector)null);
 		Attribute contents = new Attribute("contents", (FastVector)null);
@@ -93,17 +129,15 @@ public class DocumentManager {
 			saver.writeBatch();
 		}
 		else {
-			System.out.println(dataDir + " is not a directory.");
+			System.out.println(mDataDir + " is not a directory.");
 		}
+		createWordVector(arffText.toString());
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, Exception {
 		String dataDir = "/home/marc/data/";
-		String cranDir = "cranfield";
-		String news20Dir = "20news-18828";
-		String reutersDir = "reuters21578";
 
-		DocumentManager docMan = new DocumentManager();
-		docMan.createCranDataset(dataDir, cranDir);
+		DocumentManager docMan = new DocumentManager(dataDir);
+		docMan.createCranDataset();
 	}
 }
