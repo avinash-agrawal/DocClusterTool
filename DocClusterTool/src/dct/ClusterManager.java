@@ -59,7 +59,7 @@ public class ClusterManager {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String dataFile = "/home/marc/data/arff/cranfield_wv.arff";
+		String dataFile = "data/cranfield_wv.arff";
 		String[] options = Utils.splitOptions("-N 10 -L COMPLETE");
 		ClusterManager clustMan = new ClusterManager();
 		clustMan.clusterCollection(dataFile, options);

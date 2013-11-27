@@ -62,8 +62,9 @@ public class DocumentManager {
 
 	public void createCranDataset(String cranDir, String tfIdfOption)
 			throws Exception {
+		String collectionName = FilenameUtils.getBaseName(cranDir);
 		File inDir = new File(cranDir);
-		File arffText = new File("data/cranfield.arff");
+		File arffText = new File("data/" + collectionName + ".arff");
 		ArffSaver saver = new ArffSaver();
 		saver.setFile(arffText);
 
@@ -71,7 +72,7 @@ public class DocumentManager {
 		Attribute contents = new Attribute("contents", (FastVector)null);
 
 		FastVector groupnv = new FastVector(1);
-		groupnv.addElement("cranfield");
+		groupnv.addElement(collectionName);
 		Attribute group = new Attribute("class", (FastVector)null);
 
 		FastVector attrs = new FastVector(3);
@@ -79,7 +80,7 @@ public class DocumentManager {
 		attrs.addElement(contents);
 		attrs.addElement(group);
 
-		Instances data = new Instances("cranfield", attrs, 0);
+		Instances data = new Instances(collectionName, attrs, 0);
 		data.setClass(group);
 
 		String delimiters = " \r\n\t.,;:\'\"()[]{}?!-_";
@@ -113,7 +114,7 @@ public class DocumentManager {
 						}
 					}
 					inst.setValue((Attribute)attrs.elementAt(1), line);
-					inst.setValue((Attribute)attrs.elementAt(2), "cranfield");
+					inst.setValue((Attribute)attrs.elementAt(2), collectionName);
 					data.add(inst);
 					reader.close();
 				}
@@ -125,12 +126,5 @@ public class DocumentManager {
 			System.out.println(cranDir + " is not a directory.");
 		}
 		createWordVector(arffText.toString(), tfIdfOption);
-	}
-
-	public static void main(String[] args) throws Exception {
-		String dataDir = "/home/marc/data/cranfield";
-		String options = "-C -I -N 1";
-		DocumentManager docMan = new DocumentManager();
-		docMan.createCranDataset(dataDir, options);
 	}
 }
