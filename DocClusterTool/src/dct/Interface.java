@@ -4,9 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Enumeration;
 
-import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -23,48 +21,32 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class Interface extends JFrame {
 
 	private static final long serialVersionUID = 18L;
+	private JRadioButton rdbtnCranfield;
+	private JRadioButton rdbtnNewsgroups;
+	private JRadioButton rdbtnReuters;
 	private final ButtonGroup btnGrpCollection = new ButtonGroup();
-	private final ButtonGroup btnGrpTermRep = new ButtonGroup();
 	private JTextField txtFldDataDir;
+	private JRadioButton rdbtnRawCounts;
+	private JRadioButton rdbtnTfIdfFormula1;
+	private JRadioButton rdbtnTfIdfFormula2;
+	private final ButtonGroup btnGrpTermRep = new ButtonGroup();
 
-	private boolean mSelectedCranfield = false;
-	private boolean mSelected20Newsgroups = false;
-	private boolean mSelectedReuters = false;
+	private boolean mSelectedCranfield;
+	private boolean mSelectedNewsgroups;
+	private boolean mSelectedReuters;
 	private String mDataDir;
 	private String mTfIdfOption;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Interface frame = new Interface();
-					frame.setVisible(true);
-				}
-				catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	private JRadioButton getSelectedRadioButton(ButtonGroup bg) {
-		for(Enumeration<AbstractButton> e = bg.getElements(); e
-				.hasMoreElements();) {
-			JRadioButton b = (JRadioButton)e.nextElement();
-			if(b.getModel() == bg.getSelection()) {
-				return b;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public Interface() {
+		mSelectedCranfield = false;
+		mSelectedNewsgroups = false;
+		mSelectedReuters = false;
+		mDataDir = "";
+		mTfIdfOption = "";
+		initUI();
+	}
+
+	private final void initUI() {
 		setTitle("Document Cluster Tool");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
@@ -92,30 +74,44 @@ public class Interface extends JFrame {
 
 		JLabel lblCollection = new JLabel("Collection");
 
-		JRadioButton rdbtnCranfield = new JRadioButton("Cranfield");
+		rdbtnCranfield = new JRadioButton("Cranfield");
 		btnGrpCollection.add(rdbtnCranfield);
+		rdbtnCranfield.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtnCranfield.isSelected()) {
+					mSelectedCranfield = true;
+				}
+				else {
+					mSelectedCranfield = false;
+				}
+			}
+		});
 
-		JRadioButton rdbtnNewsGroups = new JRadioButton("20 News Groups");
-		btnGrpCollection.add(rdbtnNewsGroups);
+		rdbtnNewsgroups = new JRadioButton("20 News Groups");
+		btnGrpCollection.add(rdbtnNewsgroups);
+		rdbtnNewsgroups.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtnNewsgroups.isSelected()) {
+					mSelectedNewsgroups = true;
+				}
+				else {
+					mSelectedNewsgroups = false;
+				}
+			}
+		});
 
-		JRadioButton rdbtnReuters = new JRadioButton("Reuters");
+		rdbtnReuters = new JRadioButton("Reuters");
 		btnGrpCollection.add(rdbtnReuters);
-
-		JRadioButton collectionSelected = getSelectedRadioButton(btnGrpCollection);
-		if(collectionSelected == rdbtnCranfield) {
-			mSelectedCranfield = true;
-		}
-		else if(collectionSelected == rdbtnNewsGroups) {
-			mSelected20Newsgroups = true;
-		}
-		else if(collectionSelected == rdbtnReuters) {
-			mSelectedReuters = true;
-		}
-		else {
-			mSelectedCranfield = false;
-			mSelected20Newsgroups = false;
-			mSelectedReuters = false;
-		}
+		rdbtnReuters.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtnReuters.isSelected()) {
+					mSelectedReuters = true;
+				}
+				else {
+					mSelectedReuters = false;
+				}
+			}
+		});
 
 		JButton btnBrowse = new JButton("Browse");
 
@@ -142,39 +138,45 @@ public class Interface extends JFrame {
 
 		JLabel lblTermRep = new JLabel("Term Representation");
 
-		JRadioButton rdbtnRawCounts = new JRadioButton("Raw Counts");
+		rdbtnRawCounts = new JRadioButton("Raw Counts");
 		btnGrpTermRep.add(rdbtnRawCounts);
+		rdbtnRawCounts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtnRawCounts.isSelected()) {
+					mTfIdfOption = "-C";
+				}
+			}
+		});
 
-		JRadioButton rdbtnTfIdfFormula1 = new JRadioButton("log(1 + tf[i][j])");
+		rdbtnTfIdfFormula1 = new JRadioButton("log(1 + tf[i][j])");
 		btnGrpTermRep.add(rdbtnTfIdfFormula1);
+		rdbtnTfIdfFormula1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtnTfIdfFormula1.isSelected()) {
+					mTfIdfOption = "-C -T -N 1";
+				}
+			}
+		});
 
-		JRadioButton rdbtnTfIdfFormula2 = new JRadioButton(
-				"tf * log(collectionSize / df)");
+		rdbtnTfIdfFormula2 = new JRadioButton("tf * log(collectionsize / df)");
 		btnGrpTermRep.add(rdbtnTfIdfFormula2);
-
-		JRadioButton selectedTermRep = getSelectedRadioButton(btnGrpTermRep);
-		if(selectedTermRep == rdbtnRawCounts) {
-			mTfIdfOption = "-C";
-		}
-		else if(selectedTermRep == rdbtnTfIdfFormula1) {
-			mTfIdfOption = "-C -T -N 1";
-		}
-		else if(selectedTermRep == rdbtnTfIdfFormula2) {
-			mTfIdfOption = "-C -I -N 1";
-		}
-		else {
-			mTfIdfOption = "";
-		}
+		rdbtnTfIdfFormula2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtnTfIdfFormula2.isSelected()) {
+					mTfIdfOption = "-C -I -N 1";
+				}
+			}
+		});
 
 		JButton btnRun = new JButton("Run");
 		btnRun.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
+			public void actionPerformed(ActionEvent e) {
 				DocumentManager docMan = new DocumentManager();
 				try {
 					if(mSelectedCranfield) {
 						docMan.createCranDataset(mDataDir, mTfIdfOption);
 					}
-					else if(mSelected20Newsgroups) {
+					else if(mSelectedNewsgroups) {
 
 					}
 					else if(mSelectedReuters) {
@@ -184,8 +186,8 @@ public class Interface extends JFrame {
 
 					}
 				}
-				catch(Exception exception) {
-					exception.getMessage();
+				catch(Exception error) {
+					error.getMessage();
 				}
 			}
 		});
@@ -231,7 +233,7 @@ public class Interface extends JFrame {
 																																		rdbtnCranfield)
 																																.addGap(18)
 																																.addComponent(
-																																		rdbtnNewsGroups)
+																																		rdbtnNewsgroups)
 																																.addGap(18)
 																																.addComponent(
 																																		rdbtnReuters))
@@ -275,7 +277,7 @@ public class Interface extends JFrame {
 										gl_panel.createParallelGroup(
 												Alignment.BASELINE)
 												.addComponent(rdbtnCranfield)
-												.addComponent(rdbtnNewsGroups)
+												.addComponent(rdbtnNewsgroups)
 												.addComponent(rdbtnReuters)
 												.addComponent(lblCollection))
 								.addGap(46)
@@ -305,5 +307,19 @@ public class Interface extends JFrame {
 								.addComponent(btnRun)
 								.addContainerGap(51, Short.MAX_VALUE)));
 		panel.setLayout(gl_panel);
+	}
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Interface frame = new Interface();
+					frame.setVisible(true);
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
