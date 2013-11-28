@@ -37,8 +37,7 @@ public class DocumentManager {
 		return clean;
 	}
 
-	private void createWordVector(String filetxt, String tfIdfOption)
-			throws Exception {
+	private void createWordVector(String filetxt, String tfIdfOption) throws Exception {
 		ArffLoader loader = new ArffLoader();
 		loader.setFile(new File(filetxt));
 		Instances textData = loader.getDataSet();
@@ -50,8 +49,8 @@ public class DocumentManager {
 		Instances wvData = Filter.useFilter(textData, filter);
 		wvData.setRelationName(FilenameUtils.getBaseName(filetxt));
 
-		String filewv = FilenameUtils.getFullPath(filetxt)
-				+ FilenameUtils.getBaseName(filetxt) + "_wv."
+		String filewv = FilenameUtils.getFullPath(filetxt) + FilenameUtils.getBaseName(filetxt)
+				+ "_wv."
 				+ FilenameUtils.getExtension(filetxt);
 
 		ArffSaver saver = new ArffSaver();
@@ -60,8 +59,7 @@ public class DocumentManager {
 		saver.writeBatch();
 	}
 
-	public void createCranDataset(String cranDir, String tfIdfOption)
-			throws Exception {
+	public void createCranDataset(String cranDir, String tfIdfOption) throws Exception {
 		String collectionName = FilenameUtils.getBaseName(cranDir);
 		File inDir = new File(cranDir);
 		File arffText = new File("data/" + collectionName + ".arff");
@@ -95,8 +93,7 @@ public class DocumentManager {
 				File file = new File(inDir + "/" + files[i]);
 
 				if(!file.isDirectory()) {
-					BufferedReader reader = new BufferedReader(new FileReader(
-							file));
+					BufferedReader reader = new BufferedReader(new FileReader(file));
 					Instance inst = new Instance(3);
 					inst.setValue((Attribute)attrs.elementAt(0), files[i]);
 

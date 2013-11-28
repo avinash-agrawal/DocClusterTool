@@ -52,7 +52,7 @@ public class Interface extends JFrame {
 		setBounds(100, 100, 800, 600);
 		setLocationRelativeTo(null);
 
-		String description = "<html>The Document Manager takes a document "
+		String description = "<html>" + "The Document Manager takes a document "
 				+ "collection and calculates the document vectors and puts them"
 				+ " in a format that is compatible with the WEKA clustering "
 				+ "algorithms. Each collection requires a different type of "
@@ -64,7 +64,8 @@ public class Interface extends JFrame {
 				+ "<br /><br />"
 				+ "The Reuters collection can be downloaded at "
 				+ "http://kdd.ics.uci.edu/databases/reuters21578/reuters21578."
-				+ "tar.gz</html>";
+				+ "tar.gz"
+				+ "</html>";
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -194,118 +195,77 @@ public class Interface extends JFrame {
 
 		JLabel lblDescription = new JLabel(description);
 		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(gl_panel
-				.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						gl_panel.createSequentialGroup()
-								.addGroup(
-										gl_panel.createParallelGroup(
-												Alignment.LEADING)
-												.addGroup(
-														gl_panel.createSequentialGroup()
-																.addContainerGap()
-																.addComponent(
-																		lblDescription))
-												.addGroup(
-														gl_panel.createSequentialGroup()
-																.addGap(101)
-																.addGroup(
-																		gl_panel.createParallelGroup(
-																				Alignment.LEADING)
-																				.addGroup(
-																						gl_panel.createSequentialGroup()
-																								.addGroup(
-																										gl_panel.createParallelGroup(
-																												Alignment.TRAILING)
-																												.addComponent(
-																														btnBrowse)
-																												.addComponent(
-																														lblCollection)
-																												.addComponent(
-																														lblTermRep))
-																								.addGroup(
-																										gl_panel.createParallelGroup(
-																												Alignment.LEADING)
-																												.addGroup(
-																														gl_panel.createSequentialGroup()
-																																.addGap(12)
-																																.addComponent(
-																																		rdbtnCranfield)
-																																.addGap(18)
-																																.addComponent(
-																																		rdbtnNewsgroups)
-																																.addGap(18)
-																																.addComponent(
-																																		rdbtnReuters))
-																												.addComponent(
-																														txtFldDataDir,
-																														GroupLayout.PREFERRED_SIZE,
-																														369,
-																														GroupLayout.PREFERRED_SIZE)
-																												.addGroup(
-																														gl_panel.createSequentialGroup()
-																																.addGap(18)
-																																.addGroup(
-																																		gl_panel.createParallelGroup(
-																																				Alignment.TRAILING)
-																																				.addComponent(
-																																						rdbtnTfIdfFormula2)
-																																				.addGroup(
-																																						gl_panel.createSequentialGroup()
-																																								.addComponent(
-																																										rdbtnRawCounts)
-																																								.addGap(56)
-																																								.addComponent(
-																																										rdbtnTfIdfFormula1))))))
-																				.addGroup(
-																						gl_panel.createSequentialGroup()
-																								.addGap(226)
-																								.addComponent(
-																										btnRun)))))
-								.addContainerGap(GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)));
-		gl_panel.setVerticalGroup(gl_panel
-				.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						gl_panel.createSequentialGroup()
-								.addGap(22)
-								.addComponent(lblDescription,
-										GroupLayout.PREFERRED_SIZE, 208,
+		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel.createSequentialGroup()
+										.addContainerGap()
+										.addComponent(lblDescription))
+								.addGroup(gl_panel.createSequentialGroup()
+										.addGap(101)
+										.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+												.addGroup(gl_panel.createSequentialGroup()
+														.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+																.addComponent(btnBrowse)
+																.addComponent(lblCollection)
+																.addComponent(lblTermRep))
+														.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+																.addGroup(gl_panel.createSequentialGroup()
+																		.addGap(12)
+																		.addComponent(rdbtnCranfield)
+																		.addGap(18)
+																		.addComponent(rdbtnNewsgroups)
+																		.addGap(18)
+																		.addComponent(rdbtnReuters))
+																.addComponent(txtFldDataDir,
+																		GroupLayout.PREFERRED_SIZE,
+																		369,
+																		GroupLayout.PREFERRED_SIZE)
+																.addGroup(gl_panel.createSequentialGroup()
+																		.addGap(18)
+																		.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+																				.addComponent(rdbtnTfIdfFormula2)
+																				.addGroup(gl_panel.createSequentialGroup()
+																						.addComponent(rdbtnRawCounts)
+																						.addGap(56)
+																						.addComponent(rdbtnTfIdfFormula1))))))
+												.addGroup(gl_panel.createSequentialGroup()
+														.addGap(226)
+														.addComponent(btnRun)))))
+						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+						.addGap(22)
+						.addComponent(lblDescription,
+								GroupLayout.PREFERRED_SIZE,
+								208,
+								GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.UNRELATED)
+						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(rdbtnCranfield)
+								.addComponent(rdbtnNewsgroups)
+								.addComponent(rdbtnReuters)
+								.addComponent(lblCollection))
+						.addGap(46)
+						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE, false)
+								.addComponent(txtFldDataDir,
+										GroupLayout.PREFERRED_SIZE,
+										23,
 										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.UNRELATED)
-								.addGroup(
-										gl_panel.createParallelGroup(
-												Alignment.BASELINE)
-												.addComponent(rdbtnCranfield)
-												.addComponent(rdbtnNewsgroups)
-												.addComponent(rdbtnReuters)
-												.addComponent(lblCollection))
-								.addGap(46)
-								.addGroup(
-										gl_panel.createParallelGroup(
-												Alignment.BASELINE, false)
-												.addComponent(
-														txtFldDataDir,
-														GroupLayout.PREFERRED_SIZE,
-														23,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(btnBrowse))
-								.addGap(39)
-								.addGroup(
-										gl_panel.createParallelGroup(
-												Alignment.BASELINE)
-												.addComponent(
-														rdbtnTfIdfFormula1)
-												.addComponent(rdbtnRawCounts)
-												.addComponent(
-														lblTermRep,
-														GroupLayout.PREFERRED_SIZE,
-														15,
-														GroupLayout.PREFERRED_SIZE))
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(rdbtnTfIdfFormula2).addGap(47)
-								.addComponent(btnRun)
-								.addContainerGap(51, Short.MAX_VALUE)));
+								.addComponent(btnBrowse))
+						.addGap(39)
+						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(rdbtnTfIdfFormula1)
+								.addComponent(rdbtnRawCounts)
+								.addComponent(lblTermRep,
+										GroupLayout.PREFERRED_SIZE,
+										15,
+										GroupLayout.PREFERRED_SIZE))
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(rdbtnTfIdfFormula2)
+						.addGap(47)
+						.addComponent(btnRun)
+						.addContainerGap(51, Short.MAX_VALUE)));
 		panel.setLayout(gl_panel);
 	}
 

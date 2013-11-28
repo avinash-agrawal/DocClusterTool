@@ -19,8 +19,7 @@ import weka.gui.visualize.VisualizePanel;
 public class ClusterManager {
 	public ClusterManager() {}
 
-	private void clusterCollection(String dataFile, String[] options)
-			throws Exception {
+	private void clusterCollection(String dataFile, String[] options) throws Exception {
 		ArffLoader loader = new ArffLoader();
 		loader.setFile(new File(dataFile));
 
@@ -36,8 +35,7 @@ public class ClusterManager {
 
 		System.out.println(eval.clusterResultsToString());
 
-		PlotData2D plotData = ClustererPanel.setUpVisualizableInstances(data,
-				eval);
+		PlotData2D plotData = ClustererPanel.setUpVisualizableInstances(data, eval);
 		plotData.setPlotName(data.relationName());
 
 		VisualizePanel vp = new VisualizePanel();
