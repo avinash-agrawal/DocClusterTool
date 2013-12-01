@@ -19,14 +19,14 @@ import weka.gui.visualize.VisualizePanel;
 public class ClusterManager {
 	public ClusterManager() {}
 
-	private void clusterCollection(String dataFile, String[] options) throws Exception {
+	public void clusterCollection(String dataFile, String options) throws Exception {
 		ArffLoader loader = new ArffLoader();
 		loader.setFile(new File(dataFile));
 
 		Instances data = loader.getDataSet();
 
 		HierarchicalClusterer clusterer = new HierarchicalClusterer();
-		clusterer.setOptions(options);
+		clusterer.setOptions(Utils.splitOptions(options));
 		clusterer.buildClusterer(data);
 
 		ClusterEvaluation eval = new ClusterEvaluation();
@@ -58,7 +58,7 @@ public class ClusterManager {
 
 	public static void main(String[] args) throws Exception {
 		String dataFile = "data/cranfield_wv.arff";
-		String[] options = Utils.splitOptions("-N 10 -L COMPLETE");
+		String options = "-N 10 -L COMPLETE";
 		ClusterManager clustMan = new ClusterManager();
 		clustMan.clusterCollection(dataFile, options);
 	}
