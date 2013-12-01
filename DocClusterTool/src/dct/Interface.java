@@ -44,7 +44,6 @@ public class Interface extends JFrame {
 	private String mDistanceFunction;
 	private boolean mUseBranchLength;
 	private String mClusterOptions;
-	private JTextField txtFldDataFile;
 
 	public Interface() throws IOException {
 		mSelectedCranfield = false;
@@ -133,9 +132,8 @@ public class Interface extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(rdbtnCranfield.isSelected()) {
 					mSelectedCranfield = true;
-				}
-				else {
-					mSelectedCranfield = false;
+					mSelectedNewsgroups = false;
+					mSelectedReuters = false;
 				}
 			}
 		});
@@ -146,10 +144,9 @@ public class Interface extends JFrame {
 		rdbtnNewsgroups.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(rdbtnNewsgroups.isSelected()) {
+					mSelectedCranfield = false;
 					mSelectedNewsgroups = true;
-				}
-				else {
-					mSelectedNewsgroups = false;
+					mSelectedReuters = false;
 				}
 			}
 		});
@@ -160,10 +157,9 @@ public class Interface extends JFrame {
 		rdbtnReuters.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(rdbtnReuters.isSelected()) {
+					mSelectedCranfield = false;
+					mSelectedNewsgroups = false;
 					mSelectedReuters = true;
-				}
-				else {
-					mSelectedReuters = false;
 				}
 			}
 		});
@@ -177,6 +173,7 @@ public class Interface extends JFrame {
 
 		btnBrowseCollection.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				mCollDir = "";
 				JFileChooser fc = new JFileChooser();
 				fc.setDialogTitle("Select Collection Directory");
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -201,6 +198,7 @@ public class Interface extends JFrame {
 		btnGrpTermRep.add(rdbtnRawCounts);
 		rdbtnRawCounts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				mTfIdfOptions = "";
 				if(rdbtnRawCounts.isSelected()) {
 					mTfIdfOptions = "-C";
 				}
@@ -212,6 +210,7 @@ public class Interface extends JFrame {
 		btnGrpTermRep.add(rdbtnTfIdfFormula1);
 		rdbtnTfIdfFormula1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				mTfIdfOptions = "";
 				if(rdbtnTfIdfFormula1.isSelected()) {
 					mTfIdfOptions = "-C -T -N 1";
 				}
@@ -223,6 +222,7 @@ public class Interface extends JFrame {
 		btnGrpTermRep.add(rdbtnTfIdfFormula2);
 		rdbtnTfIdfFormula2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				mTfIdfOptions = "";
 				if(rdbtnTfIdfFormula2.isSelected()) {
 					mTfIdfOptions = "-C -I -N 1";
 				}
@@ -246,7 +246,6 @@ public class Interface extends JFrame {
 //				}
 
 				System.out.println("Running...");
-
 				DocumentManager docMan = new DocumentManager();
 
 				try {
@@ -301,12 +300,13 @@ public class Interface extends JFrame {
 		final JButton btnBrowseDataFile = new JButton("Browse");
 		btnBrowseDataFile.setBounds(12, 158, 87, 25);
 
-		txtFldDataFile = new JTextField();
+		final JTextField txtFldDataFile = new JTextField();
 		txtFldDataFile.setBounds(105, 161, 416, 19);
 		txtFldDataFile.setColumns(10);
 
 		btnBrowseDataFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				mDataFile = "";
 				JFileChooser fc = new JFileChooser();
 				fc.setCurrentDirectory(new File("data/"));
 				fc.setDialogTitle("Select ARFF Data File");
