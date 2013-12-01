@@ -37,13 +37,13 @@ public class DocumentManager {
 		return clean;
 	}
 
-	private void createWordVector(String filetxt, String tfIdfOption) throws Exception {
+	private void createWordVector(String filetxt, String tfIdfOptions) throws Exception {
 		ArffLoader loader = new ArffLoader();
 		loader.setFile(new File(filetxt));
 		Instances textData = loader.getDataSet();
 
 		StringToWordVector filter = new StringToWordVector();
-		filter.setOptions(Utils.splitOptions(tfIdfOption + " -L -S"
+		filter.setOptions(Utils.splitOptions(tfIdfOptions + " -L -S"
 				+ " -stemmer weka.core.stemmers.SnowballStemmer"));
 		filter.setInputFormat(textData);
 		Instances wvData = Filter.useFilter(textData, filter);
@@ -59,7 +59,7 @@ public class DocumentManager {
 		saver.writeBatch();
 	}
 
-	public void createCranDataset(String cranDir, String tfIdfOption) throws Exception {
+	public void createCranDataset(String cranDir, String tfIdfOptions) throws Exception {
 		String collectionName = FilenameUtils.getBaseName(cranDir);
 		File inDir = new File(cranDir);
 		File arffText = new File("data/" + collectionName + ".arff");
@@ -122,6 +122,6 @@ public class DocumentManager {
 		else {
 			System.out.println(cranDir + " is not a directory.");
 		}
-		createWordVector(arffText.toString(), tfIdfOption);
+		createWordVector(arffText.toString(), tfIdfOptions);
 	}
 }
