@@ -36,14 +36,14 @@ public class DocumentManager {
 		String noise = "`~#$%^&*=+\\|\'\"/";
 		StringBuilder clean = new StringBuilder(dirty);
 
-		for(int i = 0; i < noise.length(); i++)
-			for(int j = 0; j < clean.length(); j++)
+		for(int i = 0; i < noise.length(); i++) {
+			for(int j = 0; j < clean.length(); j++) {
 				if(clean.charAt(j) == noise.charAt(i)) {
-					System.out.println(clean + " " + i + " " + j + " " + clean.length());
 					clean.deleteCharAt(j);
 					j--;
-					System.out.println(clean + " " + i + " " + j);
 				}
+			}
+		}
 
 		return clean.toString();
 	}
@@ -139,6 +139,7 @@ public class DocumentManager {
 
 	public void create20NewsDataset(String newsDir, String tfIdfOptions) throws Exception {
 		String collectionName = FilenameUtils.getBaseName(newsDir);
+		String arffText = "data/" + collectionName + ".arff";
 
 		TextDirectoryLoader loader = new TextDirectoryLoader();
 		loader.setOptions(Utils.splitOptions("-F -dir \"" + newsDir + "\""));
@@ -153,8 +154,10 @@ public class DocumentManager {
 		}
 
 		ArffSaver saver = new ArffSaver();
-		saver.setFile(new File("data/" + collectionName + ".arff"));
+		saver.setFile(new File(arffText));
 		saver.setInstances(data);
 		saver.writeBatch();
+
+		createWordVector(arffText, tfIdfOptions);
 	}
 }
