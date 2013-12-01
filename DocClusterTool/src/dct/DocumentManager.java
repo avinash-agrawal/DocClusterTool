@@ -13,12 +13,18 @@ import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
+import weka.core.converters.TextDirectoryLoader;
 import weka.core.tokenizers.WordTokenizer;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class DocumentManager {
-	public DocumentManager() {}
+	private WordTokenizer mTokenizer;
+
+	public DocumentManager() {
+		mTokenizer = new WordTokenizer();
+		mTokenizer.setDelimiters(" \r\n\t.,;:?!-_()[]{}");
+	}
 
 	private boolean isTag(String word) {
 		if(word.charAt(0) == '<' && word.charAt(word.length() - 1) == '>')
@@ -26,15 +32,33 @@ public class DocumentManager {
 		return false;
 	}
 
-	private String cleanLine(String dirty) {
-		String noise = "`~@#$%^&*=+\\|;:\'\",./";
-		String clean = dirty;
+	private String cleanWord(String dirty) {
+		String noise = "`~#$%^&*=+\\|\'\"/";
+		StringBuilder clean = new StringBuilder(dirty);
 
-		for(int i = 0; i < noise.length(); i++) {
-			clean = clean.replace(noise.charAt(i) + "", "");
+		for(int i = 0; i < noise.length(); i++)
+			for(int j = 0; j < clean.length(); j++)
+				if(clean.charAt(j) == noise.charAt(i)) {
+					System.out.println(clean + " " + i + " " + j + " " + clean.length());
+					clean.deleteCharAt(j);
+					j--;
+					System.out.println(clean + " " + i + " " + j);
+				}
+
+		return clean.toString();
+	}
+
+	private String tokenize(String rawLine) {
+		mTokenizer.tokenize(rawLine);
+		StringBuilder line = new StringBuilder();
+
+		while(mTokenizer.hasMoreElements()) {
+			String token = mTokenizer.nextElement().toString();
+			if(!isTag(token)) {
+				line.append(cleanWord(token) + ' ');
+			}
 		}
-
-		return clean;
+		return line.toString();
 	}
 
 	private void createWordVector(String filetxt, String tfIdfOptions) throws Exception {
@@ -66,25 +90,20 @@ public class DocumentManager {
 		ArffSaver saver = new ArffSaver();
 		saver.setFile(arffText);
 
-		Attribute filename = new Attribute("filename", (FastVector)null);
 		Attribute contents = new Attribute("contents", (FastVector)null);
+		Attribute filename = new Attribute("filename", (FastVector)null);
 
 		FastVector groupnv = new FastVector(1);
 		groupnv.addElement(collectionName);
 		Attribute group = new Attribute("class", (FastVector)null);
 
 		FastVector attrs = new FastVector(3);
-		attrs.addElement(filename);
 		attrs.addElement(contents);
+		attrs.addElement(filename);
 		attrs.addElement(group);
 
 		Instances data = new Instances(collectionName, attrs, 0);
 		data.setClass(group);
-
-		String delimiters = " \r\n\t.,;:\'\"()[]{}?!-_";
-
-		WordTokenizer tokenizer = new WordTokenizer();
-		tokenizer.setDelimiters(delimiters);
 
 		if(inDir.isDirectory()) {
 			String files[] = inDir.list();
@@ -95,22 +114,15 @@ public class DocumentManager {
 				if(!file.isDirectory()) {
 					BufferedReader reader = new BufferedReader(new FileReader(file));
 					Instance inst = new Instance(3);
-					inst.setValue((Attribute)attrs.elementAt(0), files[i]);
 
 					String rawLine = "";
 					String line = "";
 
-					while((rawLine = reader.readLine()) != null) {
-						rawLine = cleanLine(rawLine);
-						tokenizer.tokenize(rawLine);
+					while((rawLine = reader.readLine()) != null)
+						line += tokenize(rawLine);
 
-						while(tokenizer.hasMoreElements()) {
-							String token = tokenizer.nextElement().toString();
-							if(!isTag(token))
-								line += token + ' ';
-						}
-					}
-					inst.setValue((Attribute)attrs.elementAt(1), line);
+					inst.setValue((Attribute)attrs.elementAt(0), line);
+					inst.setValue((Attribute)attrs.elementAt(1), files[i]);
 					inst.setValue((Attribute)attrs.elementAt(2), collectionName);
 					data.add(inst);
 					reader.close();
@@ -123,5 +135,26 @@ public class DocumentManager {
 			System.out.println(cranDir + " is not a directory.");
 		}
 		createWordVector(arffText.toString(), tfIdfOptions);
+	}
+
+	public void create20NewsDataset(String newsDir, String tfIdfOptions) throws Exception {
+		String collectionName = FilenameUtils.getBaseName(newsDir);
+
+		TextDirectoryLoader loader = new TextDirectoryLoader();
+		loader.setOptions(Utils.splitOptions("-F -dir \"" + newsDir + "\""));
+		Instances data = loader.getDataSet();
+		data.setRelationName(collectionName);
+		data.setClassIndex(2);
+
+		for(int i = 0; i < data.numInstances(); i++) {
+			String rawLine = data.instance(i).stringValue(0);
+			String line = tokenize(rawLine);
+			data.instance(i).setValue(0, line);
+		}
+
+		ArffSaver saver = new ArffSaver();
+		saver.setFile(new File("data/" + collectionName + ".arff"));
+		saver.setInstances(data);
+		saver.writeBatch();
 	}
 }

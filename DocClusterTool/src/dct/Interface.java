@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
 
@@ -240,12 +238,12 @@ public class Interface extends JFrame {
 		btnRunDocMan.setBounds(241, 368, 61, 25);
 		btnRunDocMan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					System.setOut(new PrintStream(new PipedOutputStream(outDocMan), true));
-				}
-				catch(IOException error) {
-					System.err.println("Unable to write to Document Manager Console.");
-				}
+//				try {
+//					System.setOut(new PrintStream(new PipedOutputStream(outDocMan), true));
+//				}
+//				catch(IOException error) {
+//					System.err.println("Unable to write to Document Manager Console.");
+//				}
 
 				System.out.println("Running...");
 
@@ -256,7 +254,7 @@ public class Interface extends JFrame {
 						docMan.createCranDataset(mCollDir, mTfIdfOptions);
 					}
 					else if(mSelectedNewsgroups) {
-
+						docMan.create20NewsDataset(mCollDir, mTfIdfOptions);
 					}
 					else if(mSelectedReuters) {
 
@@ -271,7 +269,7 @@ public class Interface extends JFrame {
 					System.err.println(error.getMessage());
 					System.err.println(error.getStackTrace());
 				}
-				System.setOut(System.out);
+//				System.setOut(System.out);
 			}
 		});
 
@@ -427,12 +425,13 @@ public class Interface extends JFrame {
 		btnRunClustMan.setBounds(213, 366, 61, 25);
 		btnRunClustMan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					System.setOut(new PrintStream(new PipedOutputStream(outClustMan), true));
-				}
-				catch(IOException error) {
-					System.err.println("Unable to write to Clustering Manager Console.");
-				}
+//				try {
+//					System.setOut(new PrintStream(new PipedOutputStream(outClustMan), true));
+//				}
+//				catch(IOException error) {
+//					System.err.println("Unable to write to Clustering Manager Console.");
+//				}
+
 				System.out.println("Running...");
 
 				ClusterManager clustMan = new ClusterManager();
@@ -456,7 +455,7 @@ public class Interface extends JFrame {
 					System.err.println(error.getMessage());
 					System.err.println(error.getStackTrace());
 				}
-				System.setOut(System.out);
+//				System.setOut(System.out);
 			}
 		});
 
